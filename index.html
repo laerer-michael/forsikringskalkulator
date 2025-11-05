@@ -128,7 +128,7 @@
         } else if (boligtype === "leilighet") {
             const fellesutgifter = parseFloat(document.getElementById("fellesutgifter").value);
             if (!fellesutgifter) { alert("Oppgi fellesutgifter."); return; }
-            grunnlag = 0.5 * arslonn + 0.3 * fellesutgifter;
+            grunnlag = 0.5 * arslonn + 0.5 * fellesutgifter;
         }
 
         let x = x_base;
@@ -147,3 +147,4 @@
 
 </body>
 </html>
+
