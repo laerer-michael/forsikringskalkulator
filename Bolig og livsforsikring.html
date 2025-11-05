@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolig, livs og reiseforsikring</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f8;
+        color: #333;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #004aad;
+    }
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 15px;
+    }
+    input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        margin-top: 20px;
+        background-color: #004aad;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #00337a;
+    }
+    .resultat {
+        margin-top: 20px;
+        background: #e8f0fe;
+        border-left: 4px solid #004aad;
+        padding: 10px;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+
+<h1>Bolig, livs og reiseforsikring</h1>
+
+<form id="kalkForm">
+    <label for="boligtype">Boligtype:</label>
+    <select id="boligtype" required>
+        <option value="">Velg boligtype</option>
+        <option value="enebolig">Enebolig</option>
+        <option value="leilighet">Leilighet</option>
+    </select>
+
+    <label for="arslonn">Årslønn (kr):</label>
+    <input type="number" id="arslonn" required>
+
+    <div id="eneboligFelt">
+        <label for="boligverdi">Boligverdi (kr):</label>
+        <input type="number" id="boligverdi">
+    </div>
+
+    <div id="leilighetFelt" style="display:none;">
+        <label for="fellesutgifter">Fellesutgifter per år (kr):</label>
+        <input type="number" id="fellesutgifter">
+    </div>
+
+    <label for="gjeld">Har du mer enn 500 000 kr i gjeld?</label>
+    <select id="gjeld" required>
+        <option value="nei">Nei</option>
+        <option value="ja">Ja</option>
+    </select>
+
+    <button type="button" onclick="beregnKostnad()">Beregn forsikringskostnad</button>
+</form>
+
+<div id="resultat" class="resultat" style="display:none;"></div>
+
+<script>
+    const x_base = 2.09; // 2.09 prosent gir 14 400 kr i eksempelet
+
+    const boligtypeSelect = document.getElementById("boligtype");
+    const eneboligFelt = document.getElementById("eneboligFelt");
+    const leilighetFelt = document.getElementById("leilighetFelt");
+
+    boligtypeSelect.addEventListener("change", function() {
+        if (this.value === "enebolig") {
+            eneboligFelt.style.display = "block";
+            leilighetFelt.style.display = "none";
+        } else if (this.value === "leilighet") {
+            eneboligFelt.style.display = "none";
+            leilighetFelt.style.display = "block";
+        } else {
+            eneboligFelt.style.display = "none";
+            leilighetFelt.style.display = "none";
+        }
+    });
+
+    function beregnKostnad() {
+        const boligtype = document.getElementById("boligtype").value;
+        const arslonn = parseFloat(document.getElementById("arslonn").value);
+        const gjeld = document.getElementById("gjeld").value;
+
+        if (!boligtype || !arslonn) {
+            alert("Vennligst fyll ut alle nødvendige felter.");
+            return;
+        }
+
+        let grunnlag = 0;
+        if (boligtype === "enebolig") {
+            const boligverdi = parseFloat(document.getElementById("boligverdi").value);
+            if (!boligverdi) { alert("Oppgi boligverdi."); return; }
+            grunnlag = 0.5 * arslonn + 0.1 * boligverdi;
+        } else if (boligtype === "leilighet") {
+            const fellesutgifter = parseFloat(document.getElementById("fellesutgifter").value);
+            if (!fellesutgifter) { alert("Oppgi fellesutgifter."); return; }
+            grunnlag = 0.5 * arslonn + 0.3 * fellesutgifter;
+        }
+
+        let x = x_base;
+        if (gjeld === "ja") x -= 0.5; // reduserer med ett prosentpoeng
+        if (x < 0) x = 0;
+
+        const kostnad = (x / 100) * grunnlag;
+
+        document.getElementById("resultat").style.display = "block";
+        document.getElementById("resultat").innerHTML = `
+            <strong>Omtrentlig forsikringskostnad per år:</strong><br>
+            ${kostnad.toLocaleString('no-NO', {maximumFractionDigits: 0})} kr
+        `;
+    }
+</script>
+
+</body>
+</html>
