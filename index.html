@@ -7,70 +7,107 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
             background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
+
+        .container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
         h1 {
+            text-align: center;
             color: #333;
+            margin-bottom: 30px;
         }
+
+        .radio-group {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .radio-group input {
+            margin-right: 5px;
+        }
+
         label {
             display: block;
-            margin: 10px 0 5px;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
+
         input[type="number"] {
-            width: 200px;
-            padding: 5px;
-            margin-bottom: 15px;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
-        .radio-group {
-            margin-bottom: 15px;
-        }
+
         button {
-            padding: 10px 20px;
+            width: 100%;
+            padding: 10px;
             background-color: #4CAF50;
             border: none;
             color: white;
-            cursor: pointer;
             font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
         .result {
             margin-top: 20px;
             font-weight: bold;
+            text-align: center;
             font-size: 18px;
+            color: #333;
         }
     </style>
 </head>
 <body>
 
-<h1>Bolig, livs og reiseforsikring</h1>
+<div class="container">
+    <h1>Bolig, livs og reiseforsikring</h1>
 
-<label for="aarLonn">Årslønn (kr):</label>
-<input type="number" id="aarLonn" placeholder="F.eks. 640000">
+    <div class="radio-group">
+        <input type="radio" id="leilighet" name="boligtype" value="leilighet" checked>
+        <label for="leilighet">Leilighet</label>
 
-<label for="boligVerdi">Boligverdi (kr):</label>
-<input type="number" id="boligVerdi" placeholder="F.eks. 3700000">
+        <input type="radio" id="enebolig" name="boligtype" value="enebolig">
+        <label for="enebolig">Enebolig</label>
+    </div>
 
-<div class="radio-group">
-    <label>Boligtype:</label>
-    <input type="radio" id="leilighet" name="boligtype" value="leilighet" checked>
-    <label for="leilighet">Leilighet</label>
-    <input type="radio" id="enebolig" name="boligtype" value="enebolig">
-    <label for="enebolig">Enebolig</label>
+    <label for="aarLonn">Årslønn (kr)</label>
+    <input type="number" id="aarLonn">
+
+    <label for="boligVerdi">Boligverdi (kr)</label>
+    <input type="number" id="boligVerdi">
+
+    <button onclick="beregnForsikring()">Beregn årlig forsikringskostnad</button>
+
+    <div class="result" id="result"></div>
 </div>
-
-<button onclick="beregnForsikring()">Beregn årlig forsikringskostnad</button>
-
-<div class="result" id="result"></div>
 
 <script>
 function beregnForsikring() {
     var aarLonn = parseFloat(document.getElementById("aarLonn").value);
     var boligVerdi = parseFloat(document.getElementById("boligVerdi").value);
     var boligtype = document.querySelector('input[name="boligtype"]:checked').value;
-    
+
     if (isNaN(aarLonn) || isNaN(boligVerdi)) {
         document.getElementById("result").innerHTML = "Vennligst fyll inn både årslønn og boligverdi.";
         return;
@@ -92,6 +129,8 @@ function beregnForsikring() {
 
 </body>
 </html>
+
+
 
 
 
